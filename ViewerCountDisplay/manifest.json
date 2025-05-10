@@ -3,13 +3,13 @@
   "id": "ViewerCountDisplay",
   "name": "ViewerCountDisplay",
   "author": "Rynan",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Add viewer count and streaming time display to EnhancedStreamChat v3",
-  "gameVersion": "1.20.0",
+  "gameVersion": "1.37.4",
   "dependsOn": {
-    "BSIPA": "^4.2.0",
-    "SiraUtil": "^3.0.4",
-    "BeatSaberMarkupLanguage": "^1.6.3",
-    "EnhancedStreamChat":  ">=5.0.0"
+    "BSIPA": "^4.3.5",
+    "SiraUtil": "^3.1.12",
+    "BeatSaberMarkupLanguage": "^1.12.0",
+    "EnhancedStreamChat":  ">=8.0.0"
   }
 }
