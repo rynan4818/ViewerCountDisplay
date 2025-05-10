@@ -1,6 +1,8 @@
 # ViewerCountDisplay
 このBeatSaberプラグインは[EnhancedStreamChat v3](https://github.com/denpadokei/EnhancedStreamChat-v3)のチャット画面の右下に視聴者数と配信時間を表示します
 
+![image](https://github.com/user-attachments/assets/deddd274-3ad3-4d96-8589-f9ba59e6701f)
+
 # インストール方法
 1. [リリースページ](https://github.com/rynan4818/ViewerCountDisplay/releases)最新のViewerCountDisplayのリリースをダウンロードします。
 2. ダウンロードしたzipファイルを`Beat Saber`フォルダに解凍して、`Plugin`フォルダに`ViewerCountDisplay.dll`ファイルをコピーします。
