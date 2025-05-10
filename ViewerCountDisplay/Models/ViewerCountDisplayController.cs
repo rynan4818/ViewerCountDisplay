@@ -4,9 +4,10 @@ using UnityEngine.UI;
 using UnityEngine;
 using Zenject;
 using HMUI;
-using ViewerCountDisplay.HarmonyPatches;
 using BeatSaberMarkupLanguage.FloatingScreen;
 using CatCore.Models.Twitch.PubSub.Responses.VideoPlayback;
+using ViewerCountDisplay.HarmonyPatches;
+using ViewerCountDisplay.Configuration;
 
 namespace ViewerCountDisplay.Models
 {
@@ -28,6 +29,10 @@ namespace ViewerCountDisplay.Models
         public bool _onStream;
         public bool _onStreamUP;
         public int _onStreamUpCheckInterval = StreamUpCheckInterval;
+        public string _songName;
+        public string _levelAuthorName;
+        public bool _onPlayStart;
+        public bool _onPlayEnd;
 
         public ViewerCountDisplayController(CatCoreManager catCoreManager)
         {
@@ -43,6 +48,21 @@ namespace ViewerCountDisplay.Models
 
         public void Tick()
         {
+            if (this._init && PluginConfig.Instance.StreamMarkerEnable)
+            {
+                if (this._onPlayStart)
+                {
+                    this._onPlayStart = false;
+                    var description = $"START:{this._songName} [{this._levelAuthorName}]";
+                    _ = this._catCoreManager.CreateStreamMarker(description);
+                }
+                if (this._onPlayEnd)
+                {
+                    this._onPlayEnd = false;
+                    var description = $"END:{this._songName} [{this._levelAuthorName}]";
+                    _ = this._catCoreManager.CreateStreamMarker(description);
+                }
+            }
             if (this._currentCycleTime < 1f)
             {
                 this._currentCycleTime += Time.deltaTime;
@@ -57,7 +77,7 @@ namespace ViewerCountDisplay.Models
                     _ = this.GetStreamData();
                 }
             }
-            if (!this._init || this._viewerCountTextMesh == null)
+            if (!this._init)
                 return;
             if (this._onStreamUP)
             {
@@ -67,13 +87,13 @@ namespace ViewerCountDisplay.Models
             }
             if (this._onStream)
             {
-                this._viewerCountTextMesh.text = this._viewCount.ToString();
-                this._onStreamTimeTextMesh.text = (DateTime.Now - this._startTime).ToString(@"hh\:mm\:ss");
+                this.ViewCountDisplayUpdate(this._viewCount.ToString());
+                this.StreamTimeDisplayUpdate((DateTime.Now - this._startTime).ToString(@"hh\:mm\:ss"));
             }
             else
             {
-                this._viewerCountTextMesh.text = "";
-                this._onStreamTimeTextMesh.text = "";
+                this.ViewCountDisplayUpdate("");
+                this.StreamTimeDisplayUpdate("");
             }
         }
 
@@ -95,7 +115,7 @@ namespace ViewerCountDisplay.Models
         public void OnViewCountUpdated(ViewCountUpdate viewerCount)
         {
             this._viewCount = viewerCount.Viewers;
-            this.ViewCountDisplayUpdate();
+            this.ViewCountDisplayUpdate(this._viewCount.ToString());
         }
 
         public async Task GetStreamData()
@@ -113,11 +133,20 @@ namespace ViewerCountDisplay.Models
             this._onStreamUP = false;
         }
 
-        public void ViewCountDisplayUpdate()
+        public void ViewCountDisplayUpdate(string viewCount)
         {
             if (this._viewerCountTextMesh == null)
                 return;
-            this._viewerCountTextMesh.text = this._viewCount.ToString();
+            if (PluginConfig.Instance.ViewerCountEnable)
+                this._viewerCountTextMesh.text = viewCount;
+        }
+
+        public void StreamTimeDisplayUpdate(string streamTime)
+        {
+            if (this._onStreamTimeTextMesh == null)
+                return;
+            if (PluginConfig.Instance.StreamTimeEnable)
+                this._onStreamTimeTextMesh.text = streamTime;
         }
 
         public GameObject NewCanvasCreate(string canvasName, Transform parent)
@@ -135,20 +164,26 @@ namespace ViewerCountDisplay.Models
             rootObject.transform.localPosition = CanvasPosition;
             rootObject.transform.localEulerAngles = CanvasRotation; ;
             rootObject.transform.localScale = CanvasScale;
-            this._viewerCountTextMesh = this.CreateText(canvas.transform as RectTransform, string.Empty, new Vector2(10, 31));
-            rectTransform = this._viewerCountTextMesh.transform as RectTransform;
-            rectTransform.SetParent(canvas.transform, false);
-            rectTransform.anchoredPosition = Vector2.zero;
-            this._viewerCountTextMesh.fontSize = 12;
-            this._viewerCountTextMesh.color = Color.white;
-            this._viewerCountTextMesh.text = "-";
-            this._onStreamTimeTextMesh = this.CreateText(canvas.transform as RectTransform, string.Empty, new Vector2(10, 31));
-            rectTransform = this._onStreamTimeTextMesh.transform as RectTransform;
-            rectTransform.SetParent(canvas.transform, false);
-            rectTransform.anchoredPosition = Vector2.zero;
-            this._onStreamTimeTextMesh.fontSize = 8;
-            this._onStreamTimeTextMesh.color = Color.white;
-            this._onStreamTimeTextMesh.text = "-";
+            if (PluginConfig.Instance.ViewerCountEnable)
+            {
+                this._viewerCountTextMesh = this.CreateText(canvas.transform as RectTransform, string.Empty, new Vector2(10, 31));
+                rectTransform = this._viewerCountTextMesh.transform as RectTransform;
+                rectTransform.SetParent(canvas.transform, false);
+                rectTransform.anchoredPosition = Vector2.zero;
+                this._viewerCountTextMesh.fontSize = 12;
+                this._viewerCountTextMesh.color = Color.white;
+                this._viewerCountTextMesh.text = "-";
+            }
+            if (PluginConfig.Instance.StreamTimeEnable)
+            {
+                this._onStreamTimeTextMesh = this.CreateText(canvas.transform as RectTransform, string.Empty, new Vector2(10, 31));
+                rectTransform = this._onStreamTimeTextMesh.transform as RectTransform;
+                rectTransform.SetParent(canvas.transform, false);
+                rectTransform.anchoredPosition = Vector2.zero;
+                this._onStreamTimeTextMesh.fontSize = 8;
+                this._onStreamTimeTextMesh.color = Color.white;
+                this._onStreamTimeTextMesh.text = "-";
+            }
             return rootObject;
         }
 

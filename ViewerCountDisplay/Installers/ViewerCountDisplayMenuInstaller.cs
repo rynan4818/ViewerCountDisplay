@@ -1,4 +1,5 @@
-﻿using ViewerCountDisplay.Models;
+﻿/*
+using ViewerCountDisplay.Models;
 using Zenject;
 
 namespace ViewerCountDisplay.Installers
@@ -11,3 +12,4 @@ namespace ViewerCountDisplay.Installers
         }
     }
 }
+*/

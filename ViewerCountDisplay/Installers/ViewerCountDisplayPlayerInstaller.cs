@@ -1,5 +1,4 @@
-﻿/*
-//using ViewerCountDisplay.Models;
+﻿using ViewerCountDisplay.Models;
 using Zenject;
 
 namespace ViewerCountDisplay.Installers
@@ -8,8 +7,7 @@ namespace ViewerCountDisplay.Installers
     {
         public override void InstallBindings()
         {
-            //this.Container.BindInterfacesAndSelfTo<ViewerCountDisplayController>().FromNewComponentOnNewGameObject().AsCached().NonLazy();
+            this.Container.BindInterfacesAndSelfTo<GamePlayController>().AsCached().NonLazy();
         }
     }
 }
-*/

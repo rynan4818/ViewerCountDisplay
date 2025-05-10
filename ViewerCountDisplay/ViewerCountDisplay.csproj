@@ -132,6 +132,7 @@
     <Compile Include="Installers\ViewerCountDisplayMenuInstaller.cs" />
     <Compile Include="Installers\ViewerCountDisplayPlayerInstaller.cs" />
     <Compile Include="Models\CatCoreManager.cs" />
+    <Compile Include="Models\GamePlayController.cs" />
     <Compile Include="Models\ViewerCountDisplayController.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Configuration\PluginConfig.cs" />

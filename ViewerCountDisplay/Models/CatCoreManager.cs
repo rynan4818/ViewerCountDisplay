@@ -59,6 +59,14 @@ namespace ViewerCountDisplay.Models
             this.OnViewCountUpdated?.Invoke(viewerCount);
         }
 
+        public async Task CreateStreamMarker(string description)
+        {
+            var userID = this.GetOwnUserID();
+            if (userID == null)
+                return;
+            await this._twitchHelixApiService.CreateStreamMarker(userID, description);
+        }
+
         public string GetOwnUserID()
         {
             if (this._ownUserID != null)

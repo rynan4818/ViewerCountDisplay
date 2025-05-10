@@ -37,13 +37,13 @@ namespace ViewerCountDisplay
             this._harmony = new Harmony(HARMONY_ID);
 
             //BSIPAのConfigを使用する場合はコメントを外します
-            //Configuration.PluginConfig.Instance = conf.Generated<Configuration.PluginConfig>();
-            //Log.Debug("Config loaded");
+            Configuration.PluginConfig.Instance = conf.Generated<Configuration.PluginConfig>();
+            Log.Debug("Config loaded");
 
             //使用するZenjectのインストーラーのコメントを外します
             zenjector.Install<ViewerCountDisplayAppInstaller>(Location.App);
             //zenjector.Install<ViewerCountDisplayMenuInstaller>(Location.Menu);
-            //zenjector.Install<ViewerCountDisplayPlayerInstaller>(Location.Player);
+            zenjector.Install<ViewerCountDisplayPlayerInstaller>(Location.Player);
         }
 
         [OnStart]
